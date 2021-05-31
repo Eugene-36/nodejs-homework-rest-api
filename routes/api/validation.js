@@ -1,7 +1,8 @@
 const Joi = require("joi");
-
+const mongoose = require("mongoose");
 const schemaCreateContact = Joi.object({
-  name: Joi.string().alphanum().min(3).max(30).required(),
+  name: Joi.string().required(),
+  phone: Joi.string().required(),
 
   age: Joi.number().integer().min(1900).max(2013),
   inArray: Joi.boolean().optional(),
@@ -12,8 +13,8 @@ const schemaCreateContact = Joi.object({
 });
 
 const schemaUpdateContact = Joi.object({
-  name: Joi.string().alphanum().min(3).max(30).optional(),
-
+  name: Joi.string().optional(),
+  phone: Joi.string().optional(),
   age: Joi.number().integer().min(1900).max(2013).optional(),
   inArray: Joi.boolean().optional(),
   email: Joi.string().email({
@@ -23,7 +24,7 @@ const schemaUpdateContact = Joi.object({
 }).or("name", "email", "inArray");
 
 const schemaUpdateStatusContact = Joi.object({
-  inArray: Joi.boolean().required(),
+  inArray: Joi.boolean().optional(),
 });
 
 const validate = async (schema, obj, next) => {
@@ -47,5 +48,14 @@ module.exports = {
   },
   validationUpdateStatusContact: (req, res, next) => {
     return validate(schemaUpdateStatusContact, req.body, next);
+  },
+  validationMongoId: (req, res, next) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.contactId)) {
+      return next({
+        status: 404,
+        message: "Invalid ObjectId",
+      });
+    }
+    next();
   },
 };
