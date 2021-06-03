@@ -38,7 +38,7 @@ const login = async (req, res, next) => {
     }
     const id = user.id;
     const payload = { id, test: "Thanos has come" };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "2h" });
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1w" });
     await Users.updateToken(id, token);
     return res.json({ status: "success", code: 200, data: { token } });
   } catch (error) {
