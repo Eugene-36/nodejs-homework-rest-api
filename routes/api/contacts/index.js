@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const ctrl = require("../../../controllers/contacts");
+const guard = require("../../../helpers/guard");
+
 const {
   validationCreateContact,
   validationUpdateContact,
@@ -8,15 +10,26 @@ const {
   validationMongoId,
 } = require("./validation");
 // console.log(Contacts);
-router.get("/", ctrl.getAll).post("/", validationCreateContact, ctrl.create);
+router
+  .get("/", guard, ctrl.getAll)
+  .post("/", guard, validationCreateContact, ctrl.create);
 
 router
-  .get("/:contactId", validationMongoId, ctrl.getById)
-  .delete("/:contactId", validationMongoId, ctrl.remove)
-  .put("/:contactId", validationMongoId, validationUpdateContact, ctrl.update);
+  .get("/:contactId", guard, validationMongoId, ctrl.getById)
+  .delete("/:contactId", guard, validationMongoId, ctrl.remove)
+  .put(
+    "/:contactId",
+    guard,
+    validationMongoId,
+    validationUpdateContact,
+    ctrl.update
+  );
 
-router.patch("/:contactId/inArray", validationUpdateStatusContact, ctrl.update);
+router.patch(
+  "/:contactId/inArray",
+  guard,
+  validationUpdateStatusContact,
+  ctrl.update
+);
 
 module.exports = router;
-
-console.log("1");
