@@ -10,7 +10,10 @@ const Contact = require("../model/contact");
 // }; // getAll
 
 const listContacts = async (userId) => {
-  const results = await Contact.find({ owner: userId });
+  const results = await Contact.find({ owner: userId }).populate({
+    path: "owner",
+    select: "name email gender",
+  });
   return results;
 };
 const getContactById = async (userId, contactId) => {
