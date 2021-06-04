@@ -1,32 +1,41 @@
-const { Schema, model, SchemaTypes } = require("mongoose");
+const mongoose = require("mongoose");
+const { Schema, model } = mongoose;
 
 const contactSchema = new Schema(
   {
-    name: String, // String is shorthand for {type: String}
-    email: String,
-    phone: String,
-    inArray: {
-      type: Boolean,
-      default: false,
+    name: {
+      type: String,
+      required: [true, "Set name for contact"],
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: [true, "Set email for contact"],
+      unique: true,
+    },
+    phone: {
+      type: String,
+      required: [true, "Set phone for contact"],
+      unique: true,
+    },
+    subscription: {
+      type: String,
+      default: "free",
+    },
+    password: {
+      type: String,
+      default: "password",
+    },
+    token: {
+      type: String,
+      default: "",
     },
     owner: {
-      type: SchemaTypes.ObjectId,
+      type: mongoose.SchemaTypes.ObjectId,
       ref: "user",
     },
-    user: [{ name: String, email: String, phone: String }],
   },
-  {
-    versionKey: false,
-    timestamps: true,
-    toJSON: {
-      virtuals: true,
-      transform: function (doc, ret) {
-        delete ret._id;
-        return ret;
-      },
-    },
-    toObject: { virtuals: true },
-  }
+  { versionKey: false, timestamps: true }
 );
 contactSchema.virtual("info").get(function () {
   console.log(`this ${this.name}`);

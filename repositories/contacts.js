@@ -1,13 +1,18 @@
 const Contact = require("../model/contact");
 
-const listContacts = async (userId) => {
-  const results = await Contact.find({ owner: userId }).populate({
-    path: "owner",
-    select: "name email gender -_id",
-  });
-  return results;
-}; // getAll
+// const listContacts = async (userId) => {
+//   const results = await Contact.find({ owner: userId }).populate({
+//     path: "owner",
+//     select: "name email phone gender -_id",
+//   });
 
+//   return results;
+// }; // getAll
+
+const listContacts = async (userId) => {
+  const results = await Contact.find({ owner: userId });
+  return results;
+};
 const getContactById = async (userId, contactId) => {
   const result = await Contact.findOne({ _id: contactId, owner: userId });
   return result;
