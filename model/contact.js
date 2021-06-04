@@ -9,7 +9,10 @@ const contactSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    owner: { type: SchemaTypes.ObjectId, ref: "user" },
+    owner: {
+      type: SchemaTypes.ObjectId,
+      ref: "user",
+    },
     user: [{ name: String, email: String, phone: String }],
   },
   {
