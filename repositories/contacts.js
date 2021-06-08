@@ -1,40 +1,68 @@
-// const fs = require("fs/promises");
-// const path = require("path");
-// const { v4: uuid } = require("uuid");
-
-// const db = require("./db");
-// const { ObjectID } = require("mongodb");
-
-// const getCollection = async (db, name) => {
-//   const client = await db;
-//   const collection = await client.db().collection(name);
-//   return collection;
-// };
 const Contact = require("../model/contact");
 
-const listContacts = async () => {
-  const results = await Contact.find();
-  return results;
-}; // getAll
+// const listContacts = async (userId) => {
+//   const results = await Contact.find({ owner: userId }).populate({
+//     path: "owner",
+//     select: "name email phone gender -_id",
+//   });
 
-const getContactById = async (contactId) => {
-  const result = await Contact.findOne({ _id: contactId });
+//   return results;
+// }; // getAll
+
+const listContacts = async (userId, query) => {
+  // const results = await Contact.find({});
+  const {
+    SortBy,
+    SortByDesc,
+    filter,
+    presentContact = null,
+    limit = 5,
+    offset = 0,
+  } = query;
+  const optionsSearch = { owner: userId };
+
+  if (presentContact !== null) {
+    optionsSearch.present = presentContact;
+  }
+  const results = await Contact.paginate(optionsSearch, {
+    limit,
+    offset,
+    sort: {
+      ...(SortBy ? { [`${SortBy}`]: 1 } : {}),
+      ...(SortByDesc ? { [`${SortByDesc}`]: -1 } : {}),
+    },
+    select: filter ? filter.split("|").join(" ") : "",
+  });
+  return results;
+};
+
+const getContactById = async (userId, contactId) => {
+  const result = await Contact.findOne({
+    _id: contactId,
+    owner: userId,
+  }).populate({
+    path: "owner",
+    select: "name email gender",
+  });
   return result;
 }; // getByID
 
-const removeContact = async (contactId) => {
-  const result = await Contact.findOneAndRemove({ _id: contactId });
+const removeContact = async (contactId, userId) => {
+  const result = await Contact.findOneAndRemove({
+    _id: contactId,
+    owner: userId,
+  });
   return result;
 };
 
-const addContact = async (body) => {
-  const result = await Contact.create(body);
+const addContact = async (userId, body) => {
+  const result = await Contact.create({ owner: userId, ...body });
   return result;
 }; // create new
 
-const updateContact = async (contactId, body) => {
+const updateContact = async (userId, contactId, body) => {
   const result = await Contact.findOneAndUpdate(
-    { _id: contactId },
+    { _id: contactId, owner: userId },
     { ...body },
     { new: false }
   );
