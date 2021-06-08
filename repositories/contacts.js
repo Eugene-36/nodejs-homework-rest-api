@@ -35,10 +35,7 @@ const listContacts = async (userId, query) => {
   });
   return results;
 };
-// const listContacts = async () => {
-//   const results = await Contact.find({});
-//   return results;
-// };
+
 const getContactById = async (userId, contactId) => {
   const result = await Contact.findOne({
     _id: contactId,
