@@ -14,11 +14,11 @@ const register = async (req, res, next) => {
         message: "Email is already used",
       });
     }
-    const { id, name, email, gender } = await Users.create(req.body);
+    const { id, name, email, gender, avatar } = await Users.create(req.body);
     return res.status(HttpCode.CREATED).json({
       status: "success",
       code: HttpCode.CREATED,
-      data: { id, name, email, gender },
+      data: { id, name, email, gender, avatar },
     });
   } catch (error) {
     next(error);
@@ -56,5 +56,7 @@ const logout = async (req, res, next) => {
     next(error);
   }
 };
-
-module.exports = { register, login, logout };
+const avatars = async (req, res, next) => {
+  return res.json({ message: "Done" });
+};
+module.exports = { register, login, logout, avatars };
