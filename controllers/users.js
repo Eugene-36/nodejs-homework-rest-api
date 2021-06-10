@@ -56,6 +56,7 @@ const logout = async (req, res, next) => {
     next(error);
   }
 };
+
 const avatars = async (req, res, next) => {
   return res.json({ message: "Done" });
 };

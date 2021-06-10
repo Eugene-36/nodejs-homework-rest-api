@@ -9,6 +9,7 @@ const guard = (req, res, next) => {
     if (headerAuth) {
       token = headerAuth.split(" ")[1];
     }
+
     if (err || !user || token !== user?.token) {
       return res.status(HttpCode.UNAUTHORIZED).json({
         status: "error",
@@ -17,6 +18,7 @@ const guard = (req, res, next) => {
       });
     }
     req.user = user;
+    console.log("route fine");
     return next();
   })(req, res, next);
 };
