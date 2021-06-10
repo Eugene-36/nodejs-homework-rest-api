@@ -59,4 +59,5 @@ const logout = async (req, res, next) => {
 const avatars = async (req, res, next) => {
   return res.json({ message: "Done" });
 };
+
 module.exports = { register, login, logout, avatars };
