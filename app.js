@@ -5,13 +5,17 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const boolParser = require("express-query-boolean");
+const path = require("path");
 const { limiterAPI } = require("./helpers/constants");
+require("dotenv").config();
+const AVATAR_OF_USERS = process.env.AVATAR_OF_USERS;
 
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 app.use(helmet());
+app.use(express.static(path.join(__dirname, AVATAR_OF_USERS)));
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json({ limit: 10000 }));
