@@ -18,7 +18,9 @@ const register = async (req, res, next) => {
         message: "Email is already used",
       });
     }
-    const { id, name, email, gender, avatar } = await Users.create(req.body);
+    const { id, name, email, gender, avatar, verifyToken } = await Users.create(
+      req.body
+    );
     return res.status(HttpCode.CREATED).json({
       status: "success",
       code: HttpCode.CREATED,
@@ -33,7 +35,7 @@ const login = async (req, res, next) => {
   try {
     const user = await Users.findByEmail(req.body.email);
     const isValidPassword = await user?.isValidPassword(req.body.password);
-    if (!user || !isValidPassword) {
+    if (!user || !isValidPassword || !user.isVerified) {
       return res.status(HttpCode.UNAUTHORIZED).json({
         status: "error",
         code: HttpCode.UNAUTHORIZED,
