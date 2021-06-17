@@ -64,3 +64,4 @@ userSchema.methods.isValidPassword = async function (password) {
 };
 const User = model("users", userSchema);
 module.exports = User;
+console.log("cccc");
