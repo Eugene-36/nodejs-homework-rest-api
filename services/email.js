@@ -18,31 +18,42 @@ class EmailService {
     }
   }
   #createTemplateVerificationEmail(verifyToken, name) {
-    const mailGenerator = new Mailgen({
-    theme: 'neopolitan',
-    product: {
-        name: 'System integration',
-        link: this.link
-    }
-    })
+    const mailGenerator = new MailGen({
+      theme: "neopolitan",
+      product: {
+        name: "System integration",
+        link: this.link,
+      },
+    });
     const email = {
-    body: {
+      body: {
         name,
-        intro: 'Welcome to System integration! ',
+        intro: "Welcome to System integration! ",
         action: {
-            instructions: 'To get started with System integration, please click here:',
-            button: {
-                color: '#22BC66', // Optional action button color
-                text: 'Confirm your account',
-                link: `${this.link}/api/users/verify/${verifyToken}`,
-            }
+          instructions:
+            "To get started with System integration, please click here:",
+          button: {
+            color: "#22BC66", // Optional action button color
+            text: "Confirm your account",
+            link: `${this.link}/api/users/verify/${verifyToken}`,
+          },
         },
-        outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
-    }
+        outro:
+          "Need help, or have questions? Just reply to this email, we'd love to help.",
+      },
     };
-    return mailGenerator.generate(email)
+    return mailGenerator.generate(email);
   }
-  async sendVerifyEmail(verifyToken,email,name)
+  async sendVerifyEmail(verifyToken, email, name) {
+    const emailHtml = this.#createTemplateVerificationEmail(verifyToken, name);
+    const msg = {
+      to: email,
+      subject: "Verify your account",
+      html: emailHtml,
+    };
+    const result = await this.sender.send(msg);
+    console.log(result);
+  }
 }
 
-module.exports = EmailService
+module.exports = EmailService;

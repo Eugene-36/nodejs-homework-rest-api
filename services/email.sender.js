@@ -4,7 +4,10 @@ require("dotenv").config();
 class CreateSenderSendGrid {
   async send(msg) {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-    return await sgMail.send({ ...msg, from: "euguen456@gmail.com" });
+    return await sgMail.send({
+      ...msg,
+      from: "Integration system <euguen456@gmail.com>",
+    });
   }
 }
 
