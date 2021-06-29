@@ -18,6 +18,7 @@ describe("test routs contacts", () => {
     const SECRET_KEY = process.env.SECRET_KEY;
     const issueToken = (payload, secret) => jwt.sign(payload, secret);
     token = issueToken({ id: user._id }, SECRET_KEY);
+    console.log(issueToken);
     await Users.updateToken(user._id, token);
   });
   afterAll(async () => {

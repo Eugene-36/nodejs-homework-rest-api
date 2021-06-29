@@ -1,24 +1,26 @@
+const nodemailer = require("nodemailer");
 const MailGen = require("mailgen");
 require("dotenv").config();
-
 class EmailService {
-  constructor(env, sender) {
-    this.sender = sender;
+  #sender = nodemailer
+  #GenerateTemplate = MailGen
+  constructor(env) {
+    //  this.nodemailer = sender;
     switch (env) {
       case "development":
-        this.link = "http://localhost:3000";
+        this.link = "http://8da56676e9ab.ngrok.io";
         break;
       case "production":
-        this.link = "link for production";
+        this.link = "http://8da56676e9ab.ngrok.io";
         break;
 
-      default:
-        "http://localhost:3000";
+       default:
+        "http://8da56676e9ab.ngrok.io";
         break;
     }
   }
   #createTemplateVerificationEmail(verifyToken, name) {
-    const mailGenerator = new MailGen({
+    const mailGenerator = new this.#GenerateTemplate({
       theme: "neopolitan",
       product: {
         name: "System integration",
@@ -45,15 +47,40 @@ class EmailService {
     return mailGenerator.generate(email);
   }
   async sendVerifyEmail(verifyToken, email, name) {
-    const emailHtml = this.#createTemplateVerificationEmail(verifyToken, name);
+    // const emailHtml = this.#createTemplateVerificationEmail(verifyToken, name);
+    // const msg = {
+    //   to: email,
+    //   subject: "Verify your account",
+    //   html: emailHtml,
+    // };
+    // const result = await this.sender.send(msg);
+    // console.log(result);
+
     const msg = {
+      host: 'smtp.meta.ua',
+      port: 465,
+      secure: true,
+      auth: {
+        user: 'livandosssss@meta.ua',
+        pass: process.env.PASSWORD,
+      },
+    }
+  
+    const transporter = this.#sender.createTransport(msg)
+
+    const emailOptions = {
+      from: 'goitnodejs@meta.ua',
       to: email,
-      subject: "Verify your account",
-      html: emailHtml,
-    };
-    const result = await this.sender.send(msg);
-    console.log(result);
+      subject: 'Verify email',
+      html: this.#createTemplateVerificationEmail(verifyToken, email, name),
+    }
+    
+    await transporter.sendMail(emailOptions)
   }
 }
-
+console.log(EmailService)
 module.exports = EmailService;
+
+
+
+

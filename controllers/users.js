@@ -4,10 +4,7 @@ const fs = require("fs/promises");
 const EmailService = require("../services/email");
 const Users = require("../repositories/users");
 const { HttpCode } = require("../helpers/constants");
-const {
-  CreateSenderNodemailer,
-  CreateSenderSendGrid,
-} = require("../services/email.sender");
+const {CreateSenderNodemailer} = require("../services/email.sender");
 require("dotenv").config();
 // const UploadAvatarService = require("../services/local-upload");
 const UploadAvatarService = require("../services/cloud-upload");
@@ -30,7 +27,7 @@ const register = async (req, res, next) => {
     try {
       const emailService = new EmailService(
         process.env.NODE_ENV,
-        new CreateSenderSendGrid()
+        new CreateSenderNodemailer()
       );
       await emailService.sendVerifyEmail(verifyToken, email, name);
     } catch (error) {
@@ -143,7 +140,7 @@ const repeatEmailVerification = async (req, res, next) => {
       if (!isVerified) {
         const emailService = new EmailService(
           process.env.NODE_ENV,
-          new CreateSenderSendGrid()
+          new CreateSenderNodemailer(),
         );
         await emailService.sendVerifyEmail(verifyToken, email, name);
         return res.json({

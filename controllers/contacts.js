@@ -78,7 +78,7 @@ const update = async (req, res, next) => {
     }
     return res
       .status(404)
-      .json({ status: "error", code: 404, message: "Not found." });
+      .json({ status: "error", code: 404, message: "Not Found" });
   } catch (e) {
     next(e);
   }
