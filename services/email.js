@@ -8,14 +8,14 @@ class EmailService {
     //  this.nodemailer = sender;
     switch (env) {
       case "development":
-        this.link = "http://8da56676e9ab.ngrok.io";
+        this.link = "https://5cbcb8b76180.ngrok.io";
         break;
       case "production":
-        this.link = "http://8da56676e9ab.ngrok.io";
+        this.link = "https://5cbcb8b76180.ngrok.io";
         break;
 
        default:
-        "http://8da56676e9ab.ngrok.io";
+        "https://5cbcb8b76180.ngrok.io";
         break;
     }
   }
@@ -66,7 +66,7 @@ class EmailService {
       },
     }
   
-    const transporter = this.#sender.createTransport(msg)
+    const transporter =  this.#sender.createTransport(msg)
 
     const emailOptions = {
       from: 'goitnodejs@meta.ua',

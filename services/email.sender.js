@@ -1,6 +1,6 @@
 // const sgMail = require("@sendgrid/mail");
-const nodemailer = require("nodemailer");
-require("dotenv").config();
+const nodemailer = require('nodemailer')
+require('dotenv').config()
 
 
 class CreateSenderNodemailer {
